@@ -1,5 +1,5 @@
 name: firestore_index_automator
-description: >-
+description: >
   A CLI tool that wraps flutter run and automatically
   detects, parses, and deploys missing Firestore
   composite indexes — no more manual index creation.
