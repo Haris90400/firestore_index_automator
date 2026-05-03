@@ -1,0 +1,20 @@
+# Test app — not part of the package
+fia_testing_app/
+
+# Firebase local config
+.firebaserc
+firestore.indexes.json
+
+# Dart/Flutter
+.dart_tool/
+.packages
+build/
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# FIA local config
+.fia.yaml

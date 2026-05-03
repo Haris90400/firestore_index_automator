@@ -1,0 +1,36 @@
+name: firestore_index_automator
+description: >-
+  A CLI tool that wraps flutter run and automatically
+  detects, parses, and deploys missing Firestore
+  composite indexes — no more manual index creation.
+version: 0.1.0
+repository: https://github.com/Haris90400/fia
+homepage: https://github.com/Haris90400/fia
+issue_tracker: https://github.com/Haris90400/fia/issues
+documentation: https://github.com/Haris90400/fia#readme
+
+topics:
+  - firebase
+  - firestore
+  - flutter
+  - cli
+  - developer-tools
+
+environment:
+  sdk: '>=3.10.0 <4.0.0'
+
+dependencies:
+  args: ^2.4.0
+  yaml: ^3.1.0
+  path: ^1.8.0
+  http: ^1.1.0
+  ansi_styles: ^0.3.0
+
+dev_dependencies:
+  test: ^1.24.0
+  mockito: ^5.4.0
+  build_runner: ^2.4.0
+  lints: ^4.0.0
+
+executables:
+  fia: fia

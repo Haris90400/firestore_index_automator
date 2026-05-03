@@ -1,0 +1,7 @@
+fia_testing_app/
+.firebaserc
+firestore.indexes.json
+*.log
+.fia.yaml
+.dart_tool/
+build/
