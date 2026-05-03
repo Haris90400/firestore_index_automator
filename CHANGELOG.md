@@ -28,3 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Cross-Platform Support**: Ensured consistent behavior across Windows (PowerShell/CMD), macOS, and Linux terminal environments.
 - **Config Support**: Added `.fia.yaml` parsing to customize debounce timing, auto-deploy features, and interactivity.
 - **Full CLI Suite**: Introduced `fia run`, `fia deploy`, `fia status`, and `fia export` commands.
+
+## [0.1.2] - 2026-05-03
+
+### Fixed
+- Fixed encoding issue in package description
