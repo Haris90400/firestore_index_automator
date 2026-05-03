@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:ansi_styles/ansi_styles.dart';
 
 /// Handles ANSI and plain text console output.
 class Logger {
@@ -9,7 +8,7 @@ class Logger {
   /// Prints an informational message (green).
   static void info(String message) {
     if (supportsAnsi) {
-      stdout.writeln(AnsiStyles.green(message));
+      stdout.writeln('\x1B[32m$message\x1B[0m');
     } else {
       stdout.writeln(message);
     }
@@ -18,7 +17,7 @@ class Logger {
   /// Prints a warning message (yellow).
   static void warning(String message) {
     if (supportsAnsi) {
-      stdout.writeln(AnsiStyles.yellow(message));
+      stdout.writeln('\x1B[33m$message\x1B[0m');
     } else {
       stdout.writeln(message);
     }
@@ -27,7 +26,7 @@ class Logger {
   /// Prints an error message (red) to stderr.
   static void error(String message) {
     if (supportsAnsi) {
-      stderr.writeln(AnsiStyles.red(message));
+      stderr.writeln('\x1B[31m$message\x1B[0m');
     } else {
       stderr.writeln(message);
     }

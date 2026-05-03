@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:ansi_styles/ansi_styles.dart';
 import 'logger.dart';
 import '../utils/constants.dart';
 
@@ -163,22 +162,22 @@ class Hud {
         final shortcuts = _interactive ? ' | D:now S:skip V:view U:undo' : '';
         line =
             '[FIA] 📦 $_pendingCount indexes pending | deploying in ${_deploySeconds}s$shortcuts';
-        if (Logger.supportsAnsi) line = AnsiStyles.yellow(line);
+        if (Logger.supportsAnsi) line = '\x1B[33m$line\x1B[0m';
         break;
       case HudState.deploying:
         line =
             '[FIA] 🚀 Deploying $_pendingCount indexes... (firebase CLI running)';
-        if (Logger.supportsAnsi) line = AnsiStyles.cyan(line);
+        if (Logger.supportsAnsi) line = '\x1B[36m$line\x1B[0m';
         break;
       case HudState.building:
         line =
             '[FIA] 🏗  $_lastCollection $_buildingCount building... (~few mins remaining)';
-        if (Logger.supportsAnsi) line = AnsiStyles.yellow(line);
+        if (Logger.supportsAnsi) line = '\x1B[33m$line\x1B[0m';
         break;
       case HudState.ready:
         line =
             '[FIA] ✅ $_lastCollection $_readyCount → READY! Press r to hot reload';
-        if (Logger.supportsAnsi) line = AnsiStyles.green(line);
+        if (Logger.supportsAnsi) line = '\x1B[32m$line\x1B[0m';
         break;
     }
 
