@@ -5,3 +5,4 @@ firestore.indexes.json
 .fia.yaml
 .dart_tool/
 build/
+pubspec.lock

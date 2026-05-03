@@ -1,9 +1,9 @@
 # FIA (Firestore Index Automator)
 
 [![pub package](https://img.shields.io/pub/v/firestore_index_automator.svg)](https://pub.dev/packages/firestore_index_automator)
-[![Likes](https://img.shields.io/pub/likes/firestore_index_automator)](https://pub.dev/packages/firestore_index_automator)
-[![Popularity](https://img.shields.io/pub/popularity/firestore_index_automator)](https://pub.dev/packages/firestore_index_automator/score)
-[![Pub Points](https://img.shields.io/pub/points/firestore_index_automator)](https://pub.dev/packages/firestore_index_automator/score)
+[![likes](https://img.shields.io/pub/likes/firestore_index_automator)](https://pub.dev/packages/firestore_index_automator/score)
+[![pub points](https://img.shields.io/pub/points/firestore_index_automator)](https://pub.dev/packages/firestore_index_automator/score)
+[![popularity](https://img.shields.io/pub/popularity/firestore_index_automator)](https://pub.dev/packages/firestore_index_automator/score)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ### What is FIA?
@@ -118,4 +118,4 @@ Contributions are very welcome! If you find a bug (like a new Firebase log forma
 
 ### License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/Haris90400/fia/blob/main/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/Haris90400/firestore_index_automator/blob/main/LICENSE) file for details.
