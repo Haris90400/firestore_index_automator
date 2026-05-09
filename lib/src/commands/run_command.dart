@@ -106,11 +106,9 @@ class RunCommand extends Command {
       if (success) {
         _deployedCount += _addedIndexes.length;
         _addedIndexes.clear();
-        _startPolling();
+        _startPolling(immediate: true);
       } else {
         _hud.clear();
-        // Force the state to idle since we failed
-        // to avoid infinite redraws of old state
       }
     };
 
@@ -166,12 +164,13 @@ class RunCommand extends Command {
     }
   }
 
-  Future<void> _startPolling() async {
+  Future<void> _startPolling({bool immediate = false}) async {
     int attempts = 0;
-    Timer.periodic(const Duration(seconds: 15), (timer) async {
+
+    final pollAction = (Timer? timer) async {
       attempts++;
-      if (attempts > 40) {
-        timer.cancel();
+      if (attempts > 60) {
+        timer?.cancel();
         _hud.clear();
         Logger.warning(
           '[FIA] ⏰ Index taking longer than expected.\nCheck status: fia status\nOr visit Firebase Console.',
@@ -190,23 +189,33 @@ class RunCommand extends Command {
         final state = idx['state'];
         if (state == 'CREATING') {
           building++;
-          lastColl = idx['queryScope']?.toString() ?? 'index';
+          lastColl = idx['collection']?.toString() ?? 'index';
         } else if (state == 'READY') {
           ready++;
         } else if (state == 'NEEDS_REPAIR') {
+          timer?.cancel();
           _hud.clear();
           Logger.warning(
             '[FIA] ⚠️ An index needs repair. Check Firebase Console.',
           );
+          return;
         }
       }
 
       if (building > 0) {
         _hud.updateBuilding(lastColl, building);
-      } else if (ready > 0 && attempts > 1) {
+      } else if (ready > 0 && (attempts > 1 || immediate)) {
         _hud.updateReady(lastColl, ready);
-        timer.cancel();
+        timer?.cancel();
       }
+    };
+
+    if (immediate) {
+      await pollAction(null);
+    }
+
+    Timer.periodic(const Duration(seconds: 15), (timer) async {
+      await pollAction(timer);
     });
   }
 

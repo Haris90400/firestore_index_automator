@@ -38,7 +38,7 @@ void main(List<String> arguments) async {
 
     final parsed = runner.argParser.parse(modifiedArgs);
     if (parsed['version'] == true) {
-      Logger.plain('fia version: 0.1.0');
+      Logger.plain('fia version: 0.1.4');
       return;
     }
 
