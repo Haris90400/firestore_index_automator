@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] - 2026-05-08
+
+### Added
+- Implemented automatic OAuth2 token refresh (no more manual auth tokens needed).
+- Added real-time building timer to the HUD with smooth ticking.
+- Added collection group name parsing in `fia status` and HUD.
+
+### Fixed
+- Improved terminal stability on Windows by disabling line clearing in HUD.
+- Handled HTTP 409 'index already exists' error gracefully.
+- Fixed authentication failures for users with newer Firebase CLI versions.
+
 ## [0.1.3] - 2026-05-03
 
 ### Fixed
