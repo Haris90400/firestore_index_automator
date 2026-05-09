@@ -29,12 +29,15 @@ class Hud {
   int _buildingCount = 0;
   int _readyCount = 0;
   String _lastCollection = '';
+  DateTime? _buildStartTime;
+  DateTime? _deployStartTime;
 
   bool _lastLineWasFIA = false;
   HudState _lastState = HudState.idle;
 
   bool _interactive = true;
   StreamSubscription<List<int>>? _stdinSub;
+  Timer? _uiTicker;
 
   /// Callback for manual deploy override.
   final Function()? onDeployNow;
@@ -104,6 +107,7 @@ class Hud {
       } catch (_) {}
     }
     _stdinSub?.cancel();
+    _stopUiTicker();
   }
 
   /// Updates HUD to show pending index deployments.
@@ -111,6 +115,7 @@ class Hud {
     _state = HudState.pending;
     _pendingCount = count;
     _deploySeconds = seconds;
+    _startUiTicker();
     _render();
   }
 
@@ -118,14 +123,20 @@ class Hud {
   void updateDeploying(int count) {
     _state = HudState.deploying;
     _pendingCount = count;
+    _deployStartTime = DateTime.now();
+    _startUiTicker();
     _render();
   }
 
   /// Updates HUD to show indexes currently building on Google servers.
   void updateBuilding(String collection, int count) {
+    if (_state != HudState.building) {
+      _buildStartTime = DateTime.now();
+    }
     _state = HudState.building;
     _lastCollection = collection;
     _buildingCount = count;
+    _startUiTicker();
     _render();
   }
 
@@ -134,6 +145,7 @@ class Hud {
     _state = HudState.ready;
     _lastCollection = collection;
     _readyCount = count;
+    _stopUiTicker();
     _render();
   }
 
@@ -152,6 +164,18 @@ class Hud {
     _render();
   }
 
+  void _startUiTicker() {
+    if (_uiTicker != null && _uiTicker!.isActive) return;
+    _uiTicker = Timer.periodic(const Duration(seconds: 1), (_) {
+      _render();
+    });
+  }
+
+  void _stopUiTicker() {
+    _uiTicker?.cancel();
+    _uiTicker = null;
+  }
+
   void _render() {
     String line = '';
 
@@ -165,13 +189,23 @@ class Hud {
         if (Logger.supportsAnsi) line = '\x1B[33m$line\x1B[0m';
         break;
       case HudState.deploying:
+        final elapsed = _deployStartTime != null
+            ? DateTime.now().difference(_deployStartTime!).inSeconds
+            : 0;
         line =
-            '[FIA] 🚀 Deploying $_pendingCount indexes... (firebase CLI running)';
+            '[FIA] 🚀 Deploying $_pendingCount indexes... (firebase CLI running ${elapsed}s)';
         if (Logger.supportsAnsi) line = '\x1B[36m$line\x1B[0m';
         break;
       case HudState.building:
+        final elapsed = _buildStartTime != null
+            ? DateTime.now().difference(_buildStartTime!).inSeconds
+            : 0;
+        final minutes = elapsed ~/ 60;
+        final seconds = elapsed % 60;
+        final timeStr = minutes > 0 ? '${minutes}m ${seconds}s' : '${seconds}s';
+
         line =
-            '[FIA] 🏗  $_lastCollection $_buildingCount building... (~few mins remaining)';
+            '[FIA] 🏗  $_lastCollection $_buildingCount building ($timeStr)...';
         if (Logger.supportsAnsi) line = '\x1B[33m$line\x1B[0m';
         break;
       case HudState.ready:
@@ -181,16 +215,34 @@ class Hud {
         break;
     }
 
+    // Pad with spaces to clear old characters on Windows (to avoid ghosting)
+    if (Platform.isWindows && line.length < 80) {
+      line = line.padRight(80);
+    }
+
     if (stdout.supportsAnsiEscapes) {
       if (_lastLineWasFIA) {
+        // Move cursor up and clear line
         stdout.write('\x1B[1A\x1B[2K');
       }
       stdout.write('$line\n');
       _lastLineWasFIA = true;
       _lastState = _state;
+    } else if (Platform.isWindows) {
+      // Fallback for Windows without ANSI support (use carriage return)
+      // Only use \r if the last line was FIA to avoid overwriting flutter logs
+      if (_lastLineWasFIA) {
+        stdout.write('\r$line');
+      } else {
+        stdout.writeln('\n$line');
+      }
+      _lastLineWasFIA = true;
+      _lastState = _state;
     } else {
-      if (_state != _lastState) {
+      // Total fallback
+      if (_state != _lastState || !_lastLineWasFIA) {
         stdout.writeln(line);
+        _lastLineWasFIA = true;
         _lastState = _state;
       }
     }

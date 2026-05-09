@@ -33,19 +33,20 @@ class StatusCommand extends Command {
 
     for (var idx in status) {
       final state = idx['state'];
-      final queryScope = idx['queryScope'];
+      final collection = idx['collection'];
       final fields = idx['fields'] as List?;
 
       String fieldNames =
           fields?.map((f) => f['fieldPath']).join(', ') ?? 'unknown';
 
       String icon = '⏳';
-      if (state == 'READY')
+      if (state == 'READY') {
         icon = '✅';
-      else if (state == 'NEEDS_REPAIR')
+      } else if (state == 'NEEDS_REPAIR') {
         icon = '⚠️';
+      }
 
-      Logger.plain('$icon [$state] $queryScope : $fieldNames');
+      Logger.plain('$icon [$state] $collection : $fieldNames');
     }
     Logger.plain('━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
   }
